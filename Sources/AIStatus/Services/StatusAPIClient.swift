@@ -1,6 +1,10 @@
 import Foundation
 
 struct StatusAPIClient: Sendable {
+    static let claudeStatusEndpoint = URL(
+        string: "https://status.claude.com/api/v2/summary.json"
+    )!
+
     private static let maximumResponseBytes = 5 * 1024 * 1024
     private let session: URLSession
     private let redirectDelegate: StatusRedirectDelegate?
@@ -54,7 +58,7 @@ struct StatusAPIClient: Sendable {
             case .claude:
                 return try await fetchStatusPage(
                     service,
-                    endpoint: "https://status.anthropic.com/api/v2/summary.json"
+                    endpoint: Self.claudeStatusEndpoint.absoluteString
                 )
             case .cursor:
                 return try await fetchStatusPage(

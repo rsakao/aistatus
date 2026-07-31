@@ -25,6 +25,11 @@ final class ServiceHealthTests: XCTestCase {
         )
     }
 
+    func testClaudeUsesCurrentOfficialStatusDomain() {
+        XCTAssertEqual(StatusAPIClient.claudeStatusEndpoint.host(), "status.claude.com")
+        XCTAssertEqual(AIService.claude.statusPageURL.host(), "status.claude.com")
+    }
+
     @MainActor
     func testNewInstallHidesCountAndEnablesEveryService() {
         let suiteName = "AIStatusTests.\(UUID().uuidString)"
