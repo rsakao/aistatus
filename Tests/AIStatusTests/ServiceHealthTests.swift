@@ -17,6 +17,14 @@ final class ServiceHealthTests: XCTestCase {
         }
     }
 
+    func testUnknownHealthUsesQuestionMarkIcon() {
+        XCTAssertEqual(ServiceHealth.unknown.symbolName, "questionmark.circle.fill")
+        XCTAssertNotEqual(
+            MenuBarIconFactory.image(for: .unknown).tiffRepresentation,
+            MenuBarIconFactory.image(for: .operational).tiffRepresentation
+        )
+    }
+
     @MainActor
     func testNewInstallHidesCountAndEnablesEveryService() {
         let suiteName = "AIStatusTests.\(UUID().uuidString)"

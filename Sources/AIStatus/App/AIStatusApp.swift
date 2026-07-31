@@ -26,6 +26,7 @@ struct AIStatusApp: App {
         } label: {
             HStack(spacing: 4) {
                 Image(nsImage: MenuBarIconFactory.image(for: store.overallHealth))
+                    .id(store.overallHealth)
                     .accessibilityLabel(store.overallHealth.title)
                 if store.showsServiceCount {
                     Text("\(store.operationalCount)/\(store.services.count)")
