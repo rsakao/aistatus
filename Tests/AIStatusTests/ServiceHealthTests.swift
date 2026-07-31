@@ -17,6 +17,14 @@ final class ServiceHealthTests: XCTestCase {
         }
     }
 
+    func testOperationalMenuBarIconUsesBlackCheckAndGreenCircle() {
+        let palette = MenuBarIconFactory.paletteColors(for: .operational)
+
+        XCTAssertEqual(palette.count, 2)
+        XCTAssertEqual(palette[0], .black)
+        XCTAssertEqual(palette[1], .systemGreen)
+    }
+
     func testUnknownHealthUsesQuestionMarkIcon() {
         XCTAssertEqual(ServiceHealth.unknown.symbolName, "questionmark.circle.fill")
         XCTAssertNotEqual(

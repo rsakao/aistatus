@@ -9,7 +9,9 @@ enum MenuBarIconFactory {
         ) ?? NSImage()
 
         let sizeConfiguration = NSImage.SymbolConfiguration(pointSize: 14, weight: .semibold)
-        let colorConfiguration = NSImage.SymbolConfiguration(paletteColors: [color(for: health)])
+        let colorConfiguration = NSImage.SymbolConfiguration(
+            paletteColors: paletteColors(for: health)
+        )
         let configuredImage = baseImage.withSymbolConfiguration(
             sizeConfiguration.applying(colorConfiguration)
         ) ?? baseImage
@@ -20,7 +22,11 @@ enum MenuBarIconFactory {
         return configuredImage
     }
 
-    private static func color(for health: ServiceHealth) -> NSColor {
+    static func paletteColors(for health: ServiceHealth) -> [NSColor] {
+        [.black, statusColor(for: health)]
+    }
+
+    private static func statusColor(for health: ServiceHealth) -> NSColor {
         switch health {
         case .operational: .systemGreen
         case .degraded: .systemOrange
