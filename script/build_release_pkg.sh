@@ -43,7 +43,9 @@ APP_CONTENTS="$APP_BUNDLE/Contents"
 APP_MACOS="$APP_CONTENTS/MacOS"
 APP_RESOURCES="$APP_CONTENTS/Resources"
 APP_BINARY="$APP_MACOS/$APP_NAME"
-PKG_PATH="$DIST_DIR/$APP_NAME-$VERSION-universal.pkg"
+PKG_FILENAME="$APP_NAME-$VERSION-universal.pkg"
+PKG_PATH="$DIST_DIR/$PKG_FILENAME"
+PKG_CHECKSUM_PATH="$PKG_PATH.sha256"
 INFO_PLIST="$APP_CONTENTS/Info.plist"
 ASSET_INFO_PLIST="$DIST_DIR/.asset-info.plist"
 ENTITLEMENTS="$ROOT_DIR/Resources/AIStatus.entitlements"
@@ -119,10 +121,13 @@ if [[ -n "$NOTARY_PROFILE" ]]; then
   spctl --assess --type install --verbose=2 "$PKG_PATH"
 fi
 
-shasum -a 256 "$PKG_PATH" >"$PKG_PATH.sha256"
+(
+  cd "$DIST_DIR"
+  shasum -a 256 "$PKG_FILENAME" >"$PKG_FILENAME.sha256"
+)
 
 echo "Built $PKG_PATH"
-echo "Checksum $PKG_PATH.sha256"
+echo "Checksum $PKG_CHECKSUM_PATH"
 if [[ -z "$NOTARY_PROFILE" ]]; then
   echo "This package is for local validation only. Do not publish it until it is Developer ID signed and notarized." >&2
 fi
