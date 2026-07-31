@@ -46,7 +46,7 @@ enum AIService: String, CaseIterable, Identifiable, Sendable {
     var statusPageURL: URL {
         switch self {
         case .openAI: URL(string: "https://status.openai.com/")!
-        case .claude: URL(string: "https://status.anthropic.com/")!
+        case .claude: URL(string: "https://status.claude.com/")!
         case .gemini: URL(string: "https://status.cloud.google.com/products/Z0FZJAMvEB4j3NbCJs6B/history")!
         case .cursor: URL(string: "https://status.cursor.com/")!
         case .perplexity: URL(string: "https://status.perplexity.com/")!
