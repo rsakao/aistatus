@@ -23,7 +23,7 @@ enum MenuBarIconFactory {
     }
 
     static func paletteColors(for health: ServiceHealth) -> [NSColor] {
-        [.white, statusColor(for: health)]
+        [.black, statusColor(for: health)]
     }
 
     private static func statusColor(for health: ServiceHealth) -> NSColor {
