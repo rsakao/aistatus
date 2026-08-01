@@ -2,9 +2,35 @@ import SwiftUI
 
 struct SettingsView: View {
     let store: StatusStore
+    @State private var launchesAtLogin = false
+    @State private var launchAtLoginRequiresApproval = false
+    @State private var isSynchronizingLaunchAtLogin = false
+    @State private var launchAtLoginError: String?
 
     var body: some View {
         Form {
+            Section("アプリ") {
+                Toggle("ログイン時に起動", isOn: $launchesAtLogin)
+                Text("Macにログインしたときに、AI Statusを自動的に起動します。")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                if launchAtLoginRequiresApproval {
+                    Text("macOSでの許可が必要です。ログイン項目でAI Statusを許可してください。")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Button("ログイン項目を開く") {
+                        LaunchAtLoginManager.openLoginItemsSettings()
+                    }
+                }
+
+                if let launchAtLoginError {
+                    Text(launchAtLoginError)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
+            }
+
             Section("メニューバー") {
                 Toggle("稼働数を表示", isOn: Bindable(store).showsServiceCount)
                 Text("オンにすると、アイコンの横に「6/6」のような稼働数を表示します。")
@@ -40,6 +66,30 @@ struct SettingsView: View {
             }
         }
         .formStyle(.grouped)
-        .frame(width: 460, height: 520)
+        .frame(width: 460, height: 610)
+        .onAppear {
+            synchronizeLaunchAtLogin()
+        }
+        .onChange(of: launchesAtLogin) { _, enabled in
+            guard !isSynchronizingLaunchAtLogin else { return }
+            updateLaunchAtLogin(enabled)
+        }
+    }
+
+    private func updateLaunchAtLogin(_ enabled: Bool) {
+        do {
+            try LaunchAtLoginManager.setEnabled(enabled)
+            launchAtLoginError = nil
+        } catch {
+            launchAtLoginError = "ログイン時起動を変更できませんでした: \(error.localizedDescription)"
+        }
+        synchronizeLaunchAtLogin()
+    }
+
+    private func synchronizeLaunchAtLogin() {
+        isSynchronizingLaunchAtLogin = true
+        launchesAtLogin = LaunchAtLoginManager.isEnabled
+        launchAtLoginRequiresApproval = LaunchAtLoginManager.requiresApproval
+        isSynchronizingLaunchAtLogin = false
     }
 }
