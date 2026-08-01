@@ -222,7 +222,7 @@ footer > span { font: 700 9px ui-monospace, monospace; color: #7d7a74; white-spa
 @media (max-width: 1050px) {
   nav { gap: 13px; }
   nav > a:not(.nav-download) { display: none; }
-  .hero { grid-template-columns: 1fr 370px; gap: 25px; }
+  .hero { grid-template-columns: 1fr; gap: 25px; }
   .feature-grid { grid-template-columns: repeat(2, 1fr); }
   .feature-wide { grid-column: span 1; }
   footer { grid-template-columns: auto 1fr auto; }
