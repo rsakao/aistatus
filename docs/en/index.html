@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f2f0e8">
+  <meta name="description" content="An open-source macOS menu bar app for monitoring the official status of major AI services.">
+  <meta property="og:title" content="AI Status for macOS">
+  <meta property="og:description" content="AI service status, right from your Mac menu bar.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://rsakao.github.io/aistatus/assets/app-icon-1024.png">
+  <meta property="og:image:width" content="1024">
+  <meta property="og:image:height" content="1024">
+  <meta property="og:image:alt" content="AI Status app icon">
+  <meta name="twitter:card" content="summary">
+  <title>AI Status for macOS</title>
+  <link rel="icon" href="../assets/app-icon-64.png" type="image/png" sizes="64x64">
+  <link rel="apple-touch-icon" href="../assets/app-icon-256.png">
+  <link rel="stylesheet" href="../assets/styles.css">
+  <script defer src="../assets/site.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="AI Status home">
+      <img class="brand-icon" src="../assets/app-icon-64.png" alt="" width="34" height="34">
+      <span>AI STATUS <small>for macOS</small></span>
+    </a>
+    <nav aria-label="Page navigation">
+      <a href="#features">Features</a>
+      <a href="https://ai-status-jp-hub-2026.rojii.chatgpt.site/en">Web status</a>
+      <a href="https://github.com/rsakao/aistatus">GitHub</a>
+      <span class="language-switch" aria-label="Display language">
+        <a href="../">JP</a>
+        <a href="./" aria-current="page">EN</a>
+      </span>
+      <a class="nav-download download-link" href="https://github.com/rsakao/aistatus/releases/latest">Download</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy-block">
+        <div class="eyebrow"><span></span> NATIVE macOS MENU BAR APP</div>
+        <h1>AI service status,<br>right from your <em>menu bar</em>.</h1>
+        <p class="hero-copy">Check official status updates for OpenAI, Claude, Gemini, Cursor, and other major AI services in one quiet, native Mac app.</p>
+        <div class="hero-actions">
+          <a class="button button-primary download-link" href="https://github.com/rsakao/aistatus/releases/latest">
+            <span>Download for macOS</span><small class="release-label">Latest release</small>
+          </a>
+          <a class="button button-secondary" href="https://github.com/rsakao/aistatus">View source ↗</a>
+        </div>
+        <p class="requirements">macOS 14+ · Apple Silicon / Intel · Developer ID signed and Apple-notarized</p>
+      </div>
+
+      <div class="app-preview" aria-label="AI Status app preview">
+        <div class="menu-strip">
+          <span class="menu-status"><b>✓</b></span>
+          <span class="menu-dots">•••</span>
+          <span class="menu-clock">10:24</span>
+        </div>
+        <div class="popover">
+          <div class="popover-overview">
+            <span class="check-icon">✓</span>
+            <div><strong>All systems operational</strong><small>Last checked 10:24</small></div>
+          </div>
+          <div class="service-row"><i class="dot green"></i><span>OpenAI</span><small>Up</small></div>
+          <div class="service-row"><i class="dot green"></i><span>Claude</span><small>Up</small></div>
+          <div class="service-row"><i class="dot green"></i><span>Gemini</span><small>Up</small></div>
+          <div class="service-row"><i class="dot green"></i><span>Cursor</span><small>Up</small></div>
+          <div class="popover-action">↻ Refresh now</div>
+          <div class="popover-action">▦ Show details</div>
+        </div>
+        <span class="preview-note">Always one glance away.</span>
+      </div>
+    </section>
+
+    <section class="trust-strip" aria-label="App facts">
+      <span><b>6</b> SERVICES</span>
+      <span><b>0</b> ANALYTICS</span>
+      <span><b>100%</b> OPEN SOURCE</span>
+      <span><b>2</b> LANGUAGES</span>
+    </section>
+
+    <section class="features-section" id="features">
+      <div class="section-heading">
+        <div><span class="section-number">01</span><h2>Just the signal. None of the noise.</h2></div>
+        <p>BUILT FOR THE MENU BAR</p>
+      </div>
+      <div class="feature-grid">
+        <article class="feature-card feature-wide dark-card">
+          <span class="feature-number">01</span>
+          <div class="mini-status"><b>✓</b><span>6/6</span></div>
+          <h3>Status through color and symbols</h3>
+          <p>A green check means operational, orange means degraded, red means an outage, and “?” means unknown. See the big picture without opening a window.</p>
+        </article>
+        <article class="feature-card">
+          <span class="feature-number">02</span>
+          <div class="feature-glyph">↻</div>
+          <h3>Automatic official updates</h3>
+          <p>Refresh public status sources every 1, 5, 15, or 30 minutes.</p>
+        </article>
+        <article class="feature-card purple-card">
+          <span class="feature-number">03</span>
+          <div class="language-demo"><b>あ</b><span>⇄</span><b>EN</b></div>
+          <h3>Japanese and English</h3>
+          <p>Switch the entire app language instantly. Your choice is remembered across launches.</p>
+        </article>
+        <article class="feature-card feature-wide lime-card">
+          <span class="feature-number">04</span>
+          <div class="toggle-demo"><i></i><span>OpenAI</span><i></i><span>Claude</span><i></i><span>Gemini</span></div>
+          <h3>Monitor only what matters</h3>
+          <p>Choose from OpenAI, Claude, Gemini, Cursor, Perplexity, and GitHub Copilot. The operational count and launch-at-login behavior are optional.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="services-section">
+      <div class="section-heading">
+        <div><span class="section-number">02</span><h2>Six AI services, one place</h2></div>
+        <p>OFFICIAL STATUS SOURCES</p>
+      </div>
+      <div class="service-grid">
+        <span><b>O</b>OpenAI</span><span><b>C</b>Claude</span><span><b>G</b>Gemini</span>
+        <span><b>Cu</b>Cursor</span><span><b>P</b>Perplexity</span><span><b>Co</b>GitHub Copilot</span>
+      </div>
+      <a class="dashboard-link" href="https://ai-status-jp-hub-2026.rojii.chatgpt.site/en">
+        <span><small>WEB STATUS DASHBOARD</small><strong>Check the current status in your browser</strong></span><b>↗</b>
+      </a>
+    </section>
+
+    <section class="privacy-section">
+      <div class="privacy-copy">
+        <div class="eyebrow"><span></span> PRIVATE BY DESIGN</div>
+        <h2>No account. No tracking. No ads.</h2>
+        <p>Your preferences stay on your Mac and are never sent to the developer. The app connects directly to each provider's public status endpoint.</p>
+        <a href="privacy.html">Read the privacy policy →</a>
+      </div>
+      <div class="privacy-list">
+        <span><b>✓</b> No analytics</span>
+        <span><b>✓</b> No account required</span>
+        <span><b>✓</b> No ads or telemetry</span>
+        <span><b>✓</b> MIT licensed</span>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <div>
+        <small>READY WHEN YOU ARE</small>
+        <h2>Put AI service status<br>in your menu bar.</h2>
+      </div>
+      <a class="button button-dark download-link" href="https://github.com/rsakao/aistatus/releases/latest">
+        <span>Download for free</span><small class="release-label">Latest release</small>
+      </a>
+    </section>
+  </main>
+
+  <footer>
+    <a class="brand footer-brand" href="#top"><img class="brand-icon" src="../assets/app-icon-64.png" alt="" width="34" height="34"><span>AI STATUS</span></a>
+    <p>AI Status is an independent, unofficial project and is not affiliated with or endorsed by the service providers. Confirm important decisions on each provider's official page.</p>
+    <div class="footer-links">
+      <a href="https://github.com/rsakao/aistatus">GitHub</a>
+      <a href="https://github.com/rsakao/aistatus/releases/latest">Releases</a>
+      <a href="privacy.html">Privacy</a>
+    </div>
+    <span>MIT LICENSE · © 2026 rsakao</span>
+  </footer>
+</body>
+</html>

@@ -3,6 +3,12 @@
 AI Status is a native macOS menu bar app that summarizes the public operational
 status of major AI services. The interface is primarily Japanese.
 
+## Website
+
+The bilingual landing page is published with GitHub Pages from [`docs/`](docs/):
+
+<https://rsakao.github.io/aistatus/>
+
 ## Features
 
 - Color-coded status in the menu bar
