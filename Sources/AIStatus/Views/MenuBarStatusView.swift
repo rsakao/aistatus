@@ -4,6 +4,7 @@ import SwiftUI
 struct MenuBarStatusView: View {
     let store: StatusStore
     @Environment(\.openWindow) private var openWindow
+    @Environment(\.openSettings) private var openSettings
 
     private var language: AppLanguage { store.language }
 
@@ -102,7 +103,9 @@ struct MenuBarStatusView: View {
             }
             .buttonStyle(.plain)
 
-            SettingsLink {
+            Button {
+                openAndActivateSettings()
+            } label: {
                 Label(language.text("設定", "Settings"), systemImage: "gearshape")
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 14)
@@ -137,5 +140,14 @@ struct MenuBarStatusView: View {
         guard let date = store.lastUpdated else { return language.text("初回確認中", "Checking for the first time") }
         let time = date.formatted(Date.FormatStyle(date: .omitted, time: .shortened).locale(language.locale))
         return language.text("最終確認 \(time)", "Last checked \(time)")
+    }
+
+    private func openAndActivateSettings() {
+        NSApp.activate(ignoringOtherApps: true)
+        openSettings()
+        DispatchQueue.main.async {
+            NSApp.activate(ignoringOtherApps: true)
+            NSApp.keyWindow?.makeKeyAndOrderFront(nil)
+        }
     }
 }
