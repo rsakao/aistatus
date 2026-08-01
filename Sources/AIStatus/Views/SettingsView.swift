@@ -5,7 +5,7 @@ struct SettingsView: View {
     @State private var launchesAtLogin = false
     @State private var launchAtLoginRequiresApproval = false
     @State private var isSynchronizingLaunchAtLogin = false
-    @State private var launchAtLoginError: String?
+    @State private var launchAtLoginFailed = false
 
     private var language: AppLanguage { store.language }
 
@@ -37,8 +37,11 @@ struct SettingsView: View {
                     }
                 }
 
-                if let launchAtLoginError {
-                    Text(launchAtLoginError)
+                if launchAtLoginFailed {
+                    Text(language.text(
+                        "ログイン時起動を変更できませんでした。もう一度お試しください。",
+                        "Couldn't change launch at login. Please try again."
+                    ))
                         .font(.caption)
                         .foregroundStyle(.red)
                 }
@@ -92,12 +95,9 @@ struct SettingsView: View {
     private func updateLaunchAtLogin(_ enabled: Bool) {
         do {
             try LaunchAtLoginManager.setEnabled(enabled)
-            launchAtLoginError = nil
+            launchAtLoginFailed = false
         } catch {
-            launchAtLoginError = language.text(
-                "ログイン時起動を変更できませんでした: \(error.localizedDescription)",
-                "Couldn't change launch at login: \(error.localizedDescription)"
-            )
+            launchAtLoginFailed = true
         }
         synchronizeLaunchAtLogin()
     }
