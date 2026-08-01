@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rsakao.github.io/aistatus/sitemap.xml
