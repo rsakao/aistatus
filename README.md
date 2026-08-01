@@ -9,6 +9,7 @@ status of major AI services. The interface is primarily Japanese.
 - Optional operational count such as `6/6`
 - OpenAI, Claude, Gemini, Cursor, Perplexity, and GitHub Copilot
 - Per-service monitoring toggles
+- Optional launch at login
 - Automatic refresh every 1, 5, 15, or 30 minutes
 - Direct links to each provider's official status page
 - No accounts, analytics, ads, or telemetry
