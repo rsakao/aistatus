@@ -5,6 +5,8 @@ struct MenuBarStatusView: View {
     let store: StatusStore
     @Environment(\.openWindow) private var openWindow
 
+    private var language: AppLanguage { store.language }
+
     var body: some View {
         VStack(spacing: 0) {
             overview
@@ -42,7 +44,7 @@ struct MenuBarStatusView: View {
     private var serviceList: some View {
         VStack(spacing: 2) {
             if store.services.isEmpty {
-                Text("監視対象が選択されていません")
+                Text(language.text("監視対象が選択されていません", "No services selected"))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -60,7 +62,7 @@ struct MenuBarStatusView: View {
                             Text(status.service.name)
                                 .lineLimit(1)
                             Spacer()
-                            Text(status.health.shortTitle)
+                            Text(status.health.shortTitle(in: language))
                                 .foregroundStyle(.secondary)
                             Image(systemName: "arrow.up.right")
                                 .font(.caption2)
@@ -82,7 +84,7 @@ struct MenuBarStatusView: View {
             Button {
                 Task { await store.refresh() }
             } label: {
-                Label("今すぐ更新", systemImage: "arrow.clockwise")
+                Label(language.text("今すぐ更新", "Refresh now"), systemImage: "arrow.clockwise")
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 14)
                     .padding(.vertical, 8)
@@ -93,7 +95,7 @@ struct MenuBarStatusView: View {
             Button {
                 store.openDashboard(openWindow)
             } label: {
-                Label("詳細を表示", systemImage: "rectangle.grid.2x2")
+                Label(language.text("詳細を表示", "Show details"), systemImage: "rectangle.grid.2x2")
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 14)
                     .padding(.vertical, 8)
@@ -101,7 +103,7 @@ struct MenuBarStatusView: View {
             .buttonStyle(.plain)
 
             SettingsLink {
-                Label("設定", systemImage: "gearshape")
+                Label(language.text("設定", "Settings"), systemImage: "gearshape")
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 14)
                     .padding(.vertical, 8)
@@ -111,7 +113,7 @@ struct MenuBarStatusView: View {
             Button {
                 NSApplication.shared.terminate(nil)
             } label: {
-                Label("AI Statusを終了", systemImage: "power")
+                Label(language.text("AI Statusを終了", "Quit AI Status"), systemImage: "power")
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 14)
                     .padding(.vertical, 8)
@@ -122,17 +124,18 @@ struct MenuBarStatusView: View {
     }
 
     private var overallTitle: String {
-        if store.services.isEmpty { return "監視対象がありません" }
+        if store.services.isEmpty { return language.text("監視対象がありません", "No services selected") }
         return switch store.overallHealth {
-        case .operational: "すべて順調です"
-        case .degraded: "一部サービスに障害があります"
-        case .outage: "重大な障害が発生しています"
-        case .unknown: "ステータスを確認しています"
+        case .operational: language.text("すべて順調です", "All systems operational")
+        case .degraded: language.text("一部サービスに障害があります", "Some services are degraded")
+        case .outage: language.text("重大な障害が発生しています", "A major outage is in progress")
+        case .unknown: language.text("ステータスを確認しています", "Checking service status")
         }
     }
 
     private var updatedText: String {
-        guard let date = store.lastUpdated else { return "初回確認中" }
-        return "最終確認 \(date.formatted(date: .omitted, time: .shortened))"
+        guard let date = store.lastUpdated else { return language.text("初回確認中", "Checking for the first time") }
+        let time = date.formatted(Date.FormatStyle(date: .omitted, time: .shortened).locale(language.locale))
+        return language.text("最終確認 \(time)", "Last checked \(time)")
     }
 }

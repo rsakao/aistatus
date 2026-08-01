@@ -23,11 +23,12 @@ struct AIStatusApp: App {
     var body: some Scene {
         MenuBarExtra {
             MenuBarStatusView(store: store)
+                .environment(\.locale, store.language.locale)
         } label: {
             HStack(spacing: 4) {
                 Image(nsImage: MenuBarIconFactory.image(for: store.overallHealth))
                     .id(store.overallHealth)
-                    .accessibilityLabel(store.overallHealth.title)
+                    .accessibilityLabel(store.overallHealth.title(in: store.language))
                 if store.showsServiceCount {
                     Text("\(store.operationalCount)/\(store.services.count)")
                 }
@@ -38,12 +39,14 @@ struct AIStatusApp: App {
         Window("AI Status", id: "dashboard") {
             DashboardView(store: store)
                 .frame(minWidth: 760, minHeight: 570)
+                .environment(\.locale, store.language.locale)
         }
         .defaultSize(width: 900, height: 680)
         .windowResizability(.contentMinSize)
 
         Settings {
             SettingsView(store: store)
+                .environment(\.locale, store.language.locale)
         }
     }
 }

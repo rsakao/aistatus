@@ -6,6 +6,7 @@ status of major AI services. The interface is primarily Japanese.
 ## Features
 
 - Color-coded status in the menu bar
+- Japanese and English interface switching
 - Optional operational count such as `6/6`
 - OpenAI, Claude, Gemini, Cursor, Perplexity, and GitHub Copilot
 - Per-service monitoring toggles

@@ -8,6 +8,8 @@ struct DashboardView: View {
         GridItem(.adaptive(minimum: 235, maximum: 310), spacing: 16)
     ]
 
+    private var language: AppLanguage { store.language }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 28) {
@@ -26,7 +28,7 @@ struct DashboardView: View {
                 Button {
                     Task { await store.refresh() }
                 } label: {
-                    Label("更新", systemImage: "arrow.clockwise")
+                    Label(language.text("更新", "Refresh"), systemImage: "arrow.clockwise")
                 }
                 .keyboardShortcut("r", modifiers: .command)
                 .disabled(store.isRefreshing)
@@ -41,9 +43,9 @@ struct DashboardView: View {
                     .font(.caption.weight(.bold))
                     .tracking(1.6)
                     .foregroundStyle(.green)
-                Text("AIの「いま」を、ひと目で。")
+                Text(language.text("AIの「いま」を、ひと目で。", "AI service status, at a glance."))
                     .font(.system(size: 30, weight: .bold, design: .rounded))
-                Text("主要AIサービスの公式ステータスを一画面に集約")
+                Text(language.text("主要AIサービスの公式ステータスを一画面に集約", "Official status for major AI services in one place"))
                     .foregroundStyle(.secondary)
             }
             Spacer()
@@ -65,7 +67,7 @@ struct DashboardView: View {
                     .foregroundStyle(store.overallHealth.color)
             }
             VStack(alignment: .leading, spacing: 3) {
-                Text("現在の全体状況")
+                Text(language.text("現在の全体状況", "Overall status"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 Text(overallTitle)
@@ -75,16 +77,16 @@ struct DashboardView: View {
             VStack(alignment: .trailing, spacing: 3) {
                 Text("\(store.operationalCount) / \(store.services.count)")
                     .font(.system(.title2, design: .rounded, weight: .bold))
-                Text("正常稼働")
+                Text(language.text("正常稼働", "Operational"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
             Divider().frame(height: 36)
             VStack(alignment: .trailing, spacing: 3) {
-                Text("最終確認")
+                Text(language.text("最終確認", "Last checked"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                Text(store.lastUpdated?.formatted(date: .omitted, time: .standard) ?? "確認中")
+                Text(lastUpdatedText)
                     .font(.system(.body, design: .monospaced, weight: .semibold))
             }
         }
@@ -98,18 +100,22 @@ struct DashboardView: View {
 
     private var servicesSection: some View {
         VStack(alignment: .leading, spacing: 14) {
-            sectionTitle(number: "01", title: "サービス一覧", trailing: "\(store.services.count) SERVICES MONITORED")
+            sectionTitle(
+                number: "01",
+                title: language.text("サービス一覧", "Services"),
+                trailing: language.text("\(store.services.count) サービスを監視", "\(store.services.count) SERVICES MONITORED")
+            )
             if store.services.isEmpty {
                 ContentUnavailableView(
-                    "監視対象がありません",
+                    language.text("監視対象がありません", "No services selected"),
                     systemImage: "switch.2",
-                    description: Text("設定から監視するAIサービスを選択してください。")
+                    description: Text(language.text("設定から監視するAIサービスを選択してください。", "Choose the AI services to monitor in Settings."))
                 )
                 .frame(maxWidth: .infinity, minHeight: 150)
             } else {
                 LazyVGrid(columns: columns, alignment: .leading, spacing: 16) {
                     ForEach(store.services) { status in
-                        ServiceCard(status: status)
+                        ServiceCard(status: status, language: language)
                     }
                 }
             }
@@ -118,9 +124,13 @@ struct DashboardView: View {
 
     private var incidentsSection: some View {
         VStack(alignment: .leading, spacing: 14) {
-            sectionTitle(number: "02", title: "進行中の障害", trailing: "AUTOMATICALLY UPDATED")
+            sectionTitle(
+                number: "02",
+                title: language.text("進行中の障害", "Active incidents"),
+                trailing: language.text("自動更新", "AUTOMATICALLY UPDATED")
+            )
             if store.services.isEmpty {
-                Text("監視対象を選択すると、進行中の障害がここに表示されます。")
+                Text(language.text("監視対象を選択すると、進行中の障害がここに表示されます。", "Active incidents will appear here after you select services to monitor."))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -132,9 +142,9 @@ struct DashboardView: View {
                         .font(.title2)
                         .foregroundStyle(.green)
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("現在、重大な障害はありません")
+                        Text(language.text("現在、重大な障害はありません", "No major incidents right now"))
                             .font(.headline)
-                        Text("各サービスの公式情報を定期的に確認しています。")
+                        Text(language.text("各サービスの公式情報を定期的に確認しています。", "Official status information is checked regularly."))
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
@@ -153,20 +163,17 @@ struct DashboardView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text(overallTitle)
                             .font(.headline)
-                        Text("障害の詳細は各サービスの公式ページをご確認ください。")
+                        Text(language.text("障害の詳細は各サービスの公式ページをご確認ください。", "See each service's official status page for details."))
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
                     Spacer()
-                    Text(store.overallHealth.shortTitle.uppercased())
+                    Text(store.overallHealth.shortTitle(in: language).uppercased())
                         .font(.caption.weight(.bold))
                         .foregroundStyle(store.overallHealth.color)
                 }
                 .padding(18)
-                .background(
-                    store.overallHealth.color.opacity(0.07),
-                    in: RoundedRectangle(cornerRadius: 14)
-                )
+                .background(store.overallHealth.color.opacity(0.07), in: RoundedRectangle(cornerRadius: 14))
             } else {
                 ForEach(Array(store.activeIncidents.enumerated()), id: \.offset) { _, incident in
                     HStack(alignment: .top, spacing: 12) {
@@ -189,11 +196,29 @@ struct DashboardView: View {
     }
 
     private var disclaimer: some View {
-        Text("非公式のステータス表示です。最終判断は各社の公式ページをご確認ください。")
+        Text(language.text("非公式のステータス表示です。最終判断は各社の公式ページをご確認ください。", "This is an unofficial status display. Confirm important decisions on each provider's official page."))
             .font(.caption)
             .foregroundStyle(.tertiary)
             .frame(maxWidth: .infinity, alignment: .center)
             .padding(.top, 4)
+    }
+
+    private var overallTitle: String {
+        if store.services.isEmpty { return language.text("監視対象がありません", "No services selected") }
+        return switch store.overallHealth {
+        case .operational: language.text("すべて順調です", "All systems operational")
+        case .degraded: language.text("一部サービスに障害があります", "Some services are degraded")
+        case .outage: language.text("重大な障害が発生しています", "A major outage is in progress")
+        case .unknown:
+            store.lastUpdated == nil
+                ? language.text("ステータスを確認しています", "Checking service status")
+                : language.text("一部サービスを確認できません", "Some services could not be checked")
+        }
+    }
+
+    private var lastUpdatedText: String {
+        guard let date = store.lastUpdated else { return language.text("確認中", "Checking") }
+        return date.formatted(Date.FormatStyle(date: .omitted, time: .standard).locale(language.locale))
     }
 
     private func sectionTitle(number: String, title: String, trailing: String) -> some View {
@@ -209,23 +234,11 @@ struct DashboardView: View {
                 .foregroundStyle(.secondary)
         }
     }
-
-    private var overallTitle: String {
-        if store.services.isEmpty { return "監視対象がありません" }
-        return switch store.overallHealth {
-        case .operational: "すべて順調です"
-        case .degraded: "一部サービスに障害があります"
-        case .outage: "重大な障害が発生しています"
-        case .unknown:
-            store.lastUpdated == nil
-                ? "ステータスを確認しています"
-                : "一部サービスを確認できません"
-        }
-    }
 }
 
 private struct ServiceCard: View {
     let status: ServiceStatus
+    let language: AppLanguage
 
     var body: some View {
         Button {
@@ -238,7 +251,7 @@ private struct ServiceCard: View {
                         .frame(width: 38, height: 38)
                         .background(.primary.opacity(0.08), in: RoundedRectangle(cornerRadius: 10))
                     Spacer()
-                    Label(status.health.title, systemImage: status.health.symbolName)
+                    Label(status.health.title(in: language), systemImage: status.health.symbolName)
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(status.health.color)
                 }
@@ -251,7 +264,7 @@ private struct ServiceCard: View {
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
-                    Text(status.service.subtitle)
+                    Text(status.service.subtitle(in: language))
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -264,7 +277,7 @@ private struct ServiceCard: View {
                     }
                 }
 
-                Text(status.detail)
+                Text(status.detail(in: language))
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
@@ -279,6 +292,6 @@ private struct ServiceCard: View {
             .contentShape(RoundedRectangle(cornerRadius: 14))
         }
         .buttonStyle(.plain)
-        .help("\(status.service.name)の公式ステータスを開く")
+        .help(language.text("\(status.service.name)の公式ステータスを開く", "Open \(status.service.name)'s official status page"))
     }
 }
