@@ -6,23 +6,27 @@ enum ServiceHealth: String, Codable, CaseIterable, Sendable {
     case outage
     case unknown
 
-    var title: String {
+    func title(in language: AppLanguage) -> String {
         switch self {
-        case .operational: "正常稼働"
-        case .degraded: "一部障害"
-        case .outage: "重大障害"
-        case .unknown: "確認できません"
+        case .operational: language.text("正常稼働", "Operational")
+        case .degraded: language.text("一部障害", "Degraded")
+        case .outage: language.text("重大障害", "Major outage")
+        case .unknown: language.text("確認できません", "Unknown")
         }
     }
 
-    var shortTitle: String {
+    func shortTitle(in language: AppLanguage) -> String {
         switch self {
-        case .operational: "正常"
-        case .degraded: "注意"
-        case .outage: "障害"
-        case .unknown: "不明"
+        case .operational: language.text("正常", "Up")
+        case .degraded: language.text("注意", "Degraded")
+        case .outage: language.text("障害", "Outage")
+        case .unknown: language.text("不明", "Unknown")
         }
     }
+
+    var title: String { title(in: .japanese) }
+
+    var shortTitle: String { shortTitle(in: .japanese) }
 
     var symbolName: String {
         switch self {

@@ -63,6 +63,28 @@ final class ServiceHealthTests: XCTestCase {
     }
 
     @MainActor
+    func testLanguagePreferenceDefaultsToJapaneseAndPersists() {
+        let suiteName = "AIStatusTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+
+        let firstStore = StatusStore(defaults: defaults)
+        XCTAssertEqual(firstStore.language, .japanese)
+
+        firstStore.language = .english
+        XCTAssertEqual(StatusStore(defaults: defaults).language, .english)
+    }
+
+    func testStatusTextSupportsEnglish() {
+        XCTAssertEqual(ServiceHealth.operational.title(in: .english), "Operational")
+        XCTAssertEqual(ServiceHealth.degraded.shortTitle(in: .english), "Degraded")
+        XCTAssertEqual(AIService.cursor.subtitle(in: .english), "Editor · AI features")
+
+        let waiting = ServiceStatus.waiting(for: .openAI)
+        XCTAssertEqual(waiting.detail(in: .english), "Waiting for status update")
+    }
+
+    @MainActor
     func testServiceSelectionPersists() {
         let suiteName = "AIStatusTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!

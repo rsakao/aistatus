@@ -20,6 +20,11 @@ final class StatusStore {
             restartRefreshLoop()
         }
     }
+    var language: AppLanguage {
+        didSet {
+            defaults.set(language.rawValue, forKey: Self.languageKey)
+        }
+    }
 
     @ObservationIgnored private let client: StatusAPIClient
     @ObservationIgnored private let defaults: UserDefaults
@@ -31,6 +36,7 @@ final class StatusStore {
     private static let refreshIntervalKey = "refreshInterval"
     private static let showsServiceCountKey = "showsServiceCount"
     private static let enabledServiceIDsKey = "enabledServiceIDs"
+    private static let languageKey = "language"
 
     init(
         client: StatusAPIClient = StatusAPIClient(),
@@ -41,6 +47,7 @@ final class StatusStore {
         let savedInterval = defaults.double(forKey: Self.refreshIntervalKey)
         refreshInterval = savedInterval > 0 ? savedInterval : 300
         showsServiceCount = defaults.bool(forKey: Self.showsServiceCountKey)
+        language = AppLanguage(rawValue: defaults.string(forKey: Self.languageKey) ?? "") ?? .japanese
 
         let initialEnabledServiceIDs: Set<AIService.ID>
         if let savedIDs = defaults.array(forKey: Self.enabledServiceIDsKey) as? [String] {

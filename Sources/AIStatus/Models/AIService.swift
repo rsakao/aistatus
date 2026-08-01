@@ -21,14 +21,14 @@ enum AIService: String, CaseIterable, Identifiable, Sendable {
         }
     }
 
-    var subtitle: String {
+    func subtitle(in language: AppLanguage) -> String {
         switch self {
-        case .openAI: "ChatGPT・API"
-        case .claude: "Claude・API・Code"
+        case .openAI: "ChatGPT · API"
+        case .claude: "Claude · API · Code"
         case .gemini: "Vertex AI Gemini API"
-        case .cursor: "エディター・AI機能"
-        case .perplexity: "検索・API"
-        case .copilot: "補完・チャット"
+        case .cursor: language.text("エディター・AI機能", "Editor · AI features")
+        case .perplexity: language.text("検索・API", "Search · API")
+        case .copilot: language.text("補完・チャット", "Code completion · Chat")
         }
     }
 
@@ -72,5 +72,18 @@ struct ServiceStatus: Identifiable, Sendable {
             incidents: [],
             checkedAt: .distantPast
         )
+    }
+
+    func detail(in language: AppLanguage) -> String {
+        switch detail {
+        case "確認を待っています":
+            language.text("確認を待っています", "Waiting for status update")
+        case "公式情報を取得できませんでした":
+            language.text("公式情報を取得できませんでした", "Couldn't fetch official status")
+        case "Google Cloudで障害が発生しています":
+            language.text("Google Cloudで障害が発生しています", "An issue has occurred in Google Cloud")
+        default:
+            detail == health.title(in: .japanese) ? health.title(in: language) : detail
+        }
     }
 }
