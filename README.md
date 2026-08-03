@@ -9,6 +9,8 @@ The bilingual landing page is published with GitHub Pages from [`docs/`](docs/):
 
 <https://rsakao.github.io/aistatus/>
 
+[![Support on Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/rojidev)
+
 ## Features
 
 - Color-coded status in the menu bar
