@@ -197,6 +197,14 @@ h1 em::after { content: ""; position: absolute; left: 3%; bottom: -7px; width: 9
 .privacy-list span { min-height: 61px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #cbc7bc; font-weight: 800; }
 .privacy-list b { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; background: var(--green); }
 
+.support-section { max-width: 1400px; margin: 0 auto; padding: 84px 5vw 0; }
+.support-card { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 28px; padding: 32px; border: 1px solid #9ed14c; border-radius: 18px; background: var(--green); box-shadow: 7px 7px 0 var(--ink); }
+.support-icon { width: 64px; height: 64px; display: grid; place-items: center; border-radius: 18px; background: var(--ink); color: white; font-size: 29px; }
+.support-card small { font: 800 10px ui-monospace, monospace; letter-spacing: .14em; color: #455c2e; }
+.support-card h2 { margin: 8px 0; font-size: clamp(26px, 3vw, 38px); letter-spacing: -.055em; }
+.support-card p { max-width: 670px; margin: 0; color: #303326; font-size: 13px; line-height: 1.75; }
+.button-support { flex: 0 0 auto; background: var(--ink); color: white; box-shadow: 5px 5px 0 var(--purple); }
+
 .cta-section { max-width: 1400px; margin: 0 auto; min-height: 370px; padding: 80px 5vw; display: flex; align-items: center; justify-content: space-between; gap: 40px; }
 .cta-section small { font: 800 10px ui-monospace, monospace; letter-spacing: .14em; }
 .cta-section h2 { font-size: clamp(42px, 6vw, 76px); line-height: 1.02; letter-spacing: -.07em; margin: 18px 0 0; }
@@ -245,6 +253,9 @@ footer > span { font: 700 9px ui-monospace, monospace; color: #7d7a74; white-spa
   .feature-grid, .service-grid { grid-template-columns: 1fr; }
   .section-heading p { display: none; }
   .privacy-section { margin-top: 72px; padding: 58px 20px; grid-template-columns: 1fr; }
+  .support-section { padding: 62px 20px 0; }
+  .support-card { grid-template-columns: auto 1fr; padding: 26px; }
+  .button-support { grid-column: 1 / -1; justify-self: start; }
   .cta-section { min-height: 420px; padding: 60px 20px; flex-direction: column; align-items: flex-start; justify-content: center; }
   footer { grid-template-columns: 1fr; text-align: center; justify-items: center; }
   .footer-links { display: flex; flex-wrap: wrap; justify-content: center; }
@@ -265,6 +276,9 @@ footer > span { font: 700 9px ui-monospace, monospace; color: #7d7a74; white-spa
   .feature-card { min-height: 310px; }
   .dashboard-link { padding: 22px; }
   .dashboard-link strong { font-size: 17px; }
+  .support-card { grid-template-columns: 1fr; gap: 18px; }
+  .support-icon { width: 54px; height: 54px; }
+  .button-support { width: 100%; justify-self: stretch; }
 }
 
 @media (prefers-reduced-motion: reduce) {
