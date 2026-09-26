@@ -72,7 +72,10 @@ struct StatusAPIClient: Sendable {
                     preferredComponents: ["Copilot", "Copilot AI Model Providers"]
                 )
             case .perplexity:
-                return try await fetchPerplexity()
+                return try await fetchStatusPage(
+                    service,
+                    endpoint: "https://status.perplexity.com/api/v2/summary.json"
+                )
             case .gemini:
                 return try await fetchGemini()
             }
@@ -111,19 +114,6 @@ struct StatusAPIClient: Sendable {
             health: activeIncidents.isEmpty || health.severity >= ServiceHealth.degraded.severity ? health : .degraded,
             detail: activeIncidents.first ?? health.title,
             incidents: activeIncidents,
-            checkedAt: .now
-        )
-    }
-
-    private func fetchPerplexity() async throws -> ServiceStatus {
-        let data = try await data(from: "https://status.perplexity.com/api/v2/summary.json")
-        let response = try JSONDecoder().decode(PerplexityResponse.self, from: data)
-        let health = ServiceHealth.from(raw: response.page.status)
-        return ServiceStatus(
-            service: .perplexity,
-            health: health,
-            detail: health.title,
-            incidents: [],
             checkedAt: .now
         )
     }
@@ -251,14 +241,6 @@ private struct StatusPageSummary: Decodable {
         status = try container.decodeIfPresent(PageStatus.self, forKey: .status)
         components = try container.decodeIfPresent([Component].self, forKey: .components) ?? []
         incidents = try container.decodeIfPresent([Incident].self, forKey: .incidents) ?? []
-    }
-}
-
-private struct PerplexityResponse: Decodable {
-    let page: Page
-
-    struct Page: Decodable {
-        let status: String
     }
 }
 
