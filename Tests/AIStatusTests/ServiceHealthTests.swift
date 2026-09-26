@@ -137,6 +137,31 @@ final class ServiceHealthTests: XCTestCase {
         XCTAssertEqual(result[0].detail, "公式情報を取得できませんでした")
     }
 
+    func testPerplexityCurrentSummaryReportsOperationalWithoutIncidentsKey() async {
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [PerplexitySummaryURLProtocol.self]
+        let client = StatusAPIClient(session: URLSession(configuration: configuration))
+
+        let result = await client.fetchAll(services: [.perplexity])
+
+        XCTAssertEqual(result.count, 1)
+        XCTAssertEqual(result[0].health, .operational)
+        XCTAssertTrue(result[0].incidents.isEmpty)
+    }
+
+    func testPerplexityComponentOutageOverridesOperationalPageStatus() async {
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [PerplexitySummaryURLProtocol.self]
+        configuration.httpAdditionalHeaders = ["X-Test-Outage": "true"]
+        let client = StatusAPIClient(session: URLSession(configuration: configuration))
+
+        let result = await client.fetchAll(services: [.perplexity])
+
+        XCTAssertEqual(result.count, 1)
+        XCTAssertEqual(result[0].health, .outage)
+        XCTAssertEqual(result[0].incidents, ["API unavailable"])
+    }
+
     func testDestinationPolicyAllowsOnlySameHTTPSOrigin() {
         let original = URL(string: "https://status.openai.com/api/v2/summary.json")!
 
@@ -202,6 +227,27 @@ private func status(
         incidents: incidents,
         checkedAt: .now
     )
+}
+
+private final class PerplexitySummaryURLProtocol: URLProtocol, @unchecked Sendable {
+    override class func canInit(with request: URLRequest) -> Bool { true }
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+
+    override func startLoading() {
+        let outage = request.value(forHTTPHeaderField: "X-Test-Outage") == "true"
+        let payload = outage
+            ? #"{"page":{"name":"Perplexity"},"status":{"indicator":"none"},"components":[{"name":"API","status":"major_outage"}],"incidents":[{"name":"API unavailable","status":"investigating"}]}"#
+            : #"{"page":{"name":"Perplexity"},"status":{"description":"All Systems Operational","indicator":"none"},"components":[{"name":"API","status":"operational"},{"name":"Website","status":"operational"},{"name":"App","status":"operational"},{"name":"Computer","status":"operational"}]}"#
+        let response = HTTPURLResponse(
+            url: request.url!, statusCode: 200, httpVersion: "HTTP/1.1",
+            headerFields: ["Content-Type": "application/json"]
+        )!
+        client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+        client?.urlProtocol(self, didLoad: Data(payload.utf8))
+        client?.urlProtocolDidFinishLoading(self)
+    }
+
+    override func stopLoading() {}
 }
 
 private final class OversizedResponseURLProtocol: URLProtocol, @unchecked Sendable {
